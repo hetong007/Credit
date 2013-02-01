@@ -1,0 +1,22 @@
+The whole procedure should be like this:
+
+do cv --> put in pool --> combine pool and do the ensemble exam --> prediction on test.
+
+1.Do CV
+	Every model should be written in a single file under the directory CV with file name indicating its model.
+	
+2.Put in pool
+	Record everything needed in the future:
+	Pool, auc, variables chosen and other parameters.
+	Related files should be in the directory PoolGeneration
+	
+3. Combine pool and do the ensemble exam
+	Combine pools and records. Especially the mapping between ids and other attributes.
+	Do the ensemble and record the ID and AUC for each exam.
+	Related files should be in the directory Ensemble.
+	
+4. Prediction on test
+	According to the recorded ID and corresponding models and parameters, train them on train and predict on test.
+	Combine the predicting result and map it to [0,1].
+	Submit the result.
+	Related files should be in the directory Submission.

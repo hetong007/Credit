@@ -1,0 +1,13 @@
+# History files
+*.Rhistory
+*.Rproj
+*.csv
+*.xls
+*.RData
+*.rda
+*.pper
+lock_file
+
+# Example code in package build process
+*-Ex.R
+.Rproj.user
