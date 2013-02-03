@@ -15,7 +15,7 @@ logit.cv<-function(formula,set,cross=5,smp,varn)#could add other parameter to co
       train<-setdiff(1:n,test)
       
       model=glm(formula,data=set[train,c(1,vars)],family=binomial)
-      pred=predict(model,newdata=set[test,])
+      pred=1/(exp(-predict(model,newdata=set[test,]))+1)
       ans[test,j]=pred
       aucres=aucres+auc(y[test],pred)
     }

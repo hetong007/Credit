@@ -1,0 +1,8 @@
+
+
+final.pred1=cbind(rpart.pred,logit.pred)
+final.N=length(f3.es[[1]])
+id=1:nrow(test)
+final.pred=data.frame(id=id,f.pred=apply(final.pred1,1,sum)/final.N)
+
+write.csv(final.pred,file="RpartLogit.csv",row.names=F,col.names=F)

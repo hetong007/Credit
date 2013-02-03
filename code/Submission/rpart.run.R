@@ -1,16 +1,24 @@
-rpart.run=function(formula,cplist,trainset,testset)
+
+library(rpart)
+rpart.run=function(formula,cplist,cpfreq,trainset,testset)
 {
 	if (is.factor(trainset[,1]))
 		trainset[,1]=as.numeric(trainset[,1])-1
 	pred=rep(0,nrow(testset))
-	for (cp in cplist)
+	for (i in 1:length(cplist))
 	{
-		model=rpart(formula,data=trainset,method="anova",cp=cp)
-		pred=pred+predict(model,newdata=testset)
-		show(cp)
+		model=rpart(formula,data=trainset,method="anova",cp=cplist[i])
+		pred=pred+predict(model,newdata=testset)*cpfreq[i]
+		show(i); show(cplist[i]); show(cpfreq[i])
 	}
 	return(pred)
 }
 
-cplist=c(1,1,2,3,4,5,6,7,10,11,12,13)/1000
-rpart.pred=rpart.run(worse~.,cplist=cplist,trainset=train,testset=test)
+rpart.col=f3.es[[1]][f3.es[[1]]<=20]
+cplist=as.numeric(names(table(rpart.col)))/1000
+cpfreq=table(rpart.col)
+rpart.pred=rpart.run(worse~.,cplist=cplist,cpfreq=cpfreq,
+                     trainset=train,testset=test)
+
+
+
