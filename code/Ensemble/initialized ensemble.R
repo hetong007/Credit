@@ -31,7 +31,7 @@ init<-function(pool,ans,k,nc,cross,smp)
 
 
 ####### pool ensemble: to be improved ############
-iniensemble=function(pool,ans,smp,maxn,k,replacement=T,cross=5,seed=1024)#pool must be validation pool
+iniensemble=function(pool,ans,smp,maxn,k,replacement=T,cross=5)#pool must be validation pool
 {
   nc=ncol(pool)
   nr=nrow(pool)
@@ -42,59 +42,11 @@ iniensemble=function(pool,ans,smp,maxn,k,replacement=T,cross=5,seed=1024)#pool m
   maxauc=ini[[2]]#the max auc
   avail=rep(TRUE,nc)#the logical vector indicating available models in the pool
   
-  cumcsn=rep(0,nr)#the cumulative sum pool of chosen models
+  cumcsn=apply(pool[,cind],1,mean)#the cumulative sum pool of chosen models
   
   
   #smp=matrix(sample(1:nr,nr),ncol=ceiling(nr/cross))
-  for (tt in 1:maxn)
-  {
-    maxi=0#the index of selected model
-    topflag=TRUE#flag of peak
-    ncind=length(cind)#number of chosen models
-    for (i in 1:nc)
-    {
-      if (avail[i])
-      {
-        tmpprob=(pool[,i]+cumcsn)/(ncind+1)#the average of models in chosen and the tested one
-        tmpauc=NULL
-        
-        for (ii in 1:cross)
-          tmpauc=c(tmpauc,auc(ans[smp[ii,]],tmpprob[smp[ii,]]))#the tested auc
-        tmpauc=mean(tmpauc)
-        if (tmpauc>maxauc)
-        {
-          topflag=FALSE   #not peak yet
-          maxauc=tmpauc
-          maxi=i
-        }
-      }
-    }
-    if (!topflag)
-    {
-      cind=c(cind,maxi)#add maxi into the list
-      cumcsn=pool[,maxi]+cumcsn#add new cumcsn
-      avail[maxi]=FALSE#not available
-    }
-    else
-    {
-      tmpcsn=cumcsn/ncind
-      tmpauc=NULL
-      for (i in 1:cross)
-        tmpauc=c(tmpauc,auc(ans[smp[i,]],tmpcsn[smp[i,]]))#the tested auc
-      if (sum(as.numeric(avail))==nc)
-        return(list(ModelID=cind,AUC=tmpauc,Mean.AUC=mean(tmpauc),SD.AUC=sd(tmpauc)))
-      if (replacement)
-        avail=rep(TRUE,nc)#begin replacement
-      else
-        return(list(ModelID=cind,AUC=tmpauc,Mean.AUC=mean(tmpauc),SD.AUC=sd(tmpauc)))
-    }
-  }
-  tmpcsn=cumcsn/ncind
-  tmpauc=NULL
-  for (i in 1:cross)
-    tmpauc=c(tmpauc,auc(ans[smp[i,]],tmpcsn[smp[i,]]))#the tested auc
-  #set.seed(proc.time())
-  return(list(ModelID=cind,AUC=tmpauc,Mean.AUC=mean(tmpauc),SD.AUC=sd(tmpauc)))
+  return(ensemble(pool,ans,smp,maxn,replacement=T,cross=5,maxauc=maxauc,cind=cind,avail=avail,cumcsn=cumcsn))
 }
 ########## test ensemble ################
 testesb=function(nc,nr,maxn,k,replacement=T)

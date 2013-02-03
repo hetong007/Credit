@@ -1,14 +1,14 @@
-ensemble=function(pool,ans,smp,maxn,replacement=T,cross=5,seed=1024)#pool must be validation pool
+ensemble=function(pool,ans,smp,maxn,replacement=T,cross=5,maxauc=0,cind=NULL,avail=NULL,cumcsn=NULL)#pool must be validation pool
 {
-	cind=NULL#the list of selected ensemble
+	#cind=NULL#the list of selected ensemble
 	
 	nc=ncol(pool)
 	nr=nrow(pool)
-	
-	avail=rep(TRUE,nc)#the logical vector indicating available models in the pool
-	
-	cumcsn=rep(0,nr)#the cumulative sum pool of chosen models
-	maxauc=0#the max auc 
+	if (is.null(avail))
+		avail=rep(TRUE,nc)#the logical vector indicating available models in the pool
+	if (is.null(cumcsn))
+		cumcsn=rep(0,nr)#the cumulative sum pool of chosen models
+	#maxauc=0#the max auc 
 	#set.seed(seed)
 	#smp=matrix(sample(1:nr,nr),ncol=ceiling(nr/cross))
 	for (tt in 1:maxn)
@@ -75,3 +75,4 @@ ridge.es=ensemble(ridge.pl,ans=train$worse,smp=smp,maxn=30,replacement=T)#AUC is
 f3.es=ensemble(cbind(rpart.pl,logit.pl,ridge.pl),ans=train$worse,smp=smp,maxn=30,replacement=T)#AUC is 0.8582039
 
 
+ini.f3.es=iniensemble(cbind(rpart.pl,logit.pl,ridge.pl),k=15,ans=train$worse,smp=smp,maxn=50,replacement=T)#AUC is 0.8582039

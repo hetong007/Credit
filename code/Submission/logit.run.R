@@ -11,5 +11,5 @@ logit.run=function(formula,varlist,trainset,testset)
 	return(pred)
 }
 
-varlist=logit.var[,c(14,15,17,26,40,44,50)]
+varlist=logit.var[,c(40,50)]
 logit.pred=logit.run(worse~.,varlist=varlist,trainset=train,testset=test)
