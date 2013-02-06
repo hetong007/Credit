@@ -19,6 +19,7 @@ cplist=as.numeric(names(table(rpart.col)))/1000
 cpfreq=table(rpart.col)
 rpart.pred=rpart.run(worse~.,cplist=cplist,cpfreq=cpfreq,
                      trainset=train,testset=test)
+rpart.pred1=apply(as.matrix(rpart.pred,ncol=1),2,rpart.std)
 
 
 

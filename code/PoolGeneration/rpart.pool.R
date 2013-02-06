@@ -9,3 +9,7 @@ for (i in 1:20)
 	rpart.pl[,i]=res$Prob
 	show(rpart.auc[i])
 }
+
+#####rpart.std####
+rpart.std<-function(prob){return((prob-min(prob))/(max(prob)-min(prob)))}
+rpart.pl1=apply(rpart.pl,2,rpart.std)
