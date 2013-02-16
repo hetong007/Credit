@@ -1,4 +1,6 @@
 library(e1071)
+
+library(klaR)
 bayes.cv<-function(formula,set,cross=5,smp,varn)#could add other parameter to control the model input
 {
   y=gety(formula,data=set)
@@ -15,8 +17,8 @@ bayes.cv<-function(formula,set,cross=5,smp,varn)#could add other parameter to co
       test<-smp[i,]
       train<-setdiff(1:n,test)
       
-      model=naiveBayes(formula,data=set[train,c(1,vars)])
-      pred=predict(model,newdata=set[test,],type="raw")
+      model=NaiveBayes(formula,data=set[train,c(1,vars)],fL=1)
+      pred=predict(model,newdata=set[test,])[[2]][,2]
       ans[test,j]=pred
       aucres=aucres+auc(y[test],pred)
     }
@@ -26,11 +28,12 @@ bayes.cv<-function(formula,set,cross=5,smp,varn)#could add other parameter to co
   }
   return(list(AUC=aucr,Prob=ans))
 }
-system.time((a=logit.cv(worse~.,train,smp=smp,varn=varn)))
-logit.pl=a$Prob
-logit.auc=a$AUC
-save(logit.pl,file="logit.pl.rda")
-save(logit.auc,file="logit.auc.rda")
+system.time((a=bayes.cv(worse~.,train,smp=smp,varn=varn)))
+
+bayes.pl=a$Prob
+bayes.auc=a$AUC
+save(bayes.pl,file="bayes.pl.rda")
+save(bayes.auc,file="bayes.auc.rda")
 
 
 bayes.cv<-function(formula,set,cross=5,smp)#could add other parameter to control the model input
@@ -39,21 +42,25 @@ bayes.cv<-function(formula,set,cross=5,smp)#could add other parameter to control
   n=nrow(set)
   ans=matrix(rep(0,n),nrow=n)
   aucres=0
-    for (i in 1:cross)
-    {
-      test<-smp[i,]
-      train<-setdiff(1:n,test)
-      
-      model=NaiveBayes(formula,data=set[train,],usekernel=T,fL=1)
-      pred=predict(model,newdata=set[test,])[[2]][,2]
-      ans[test]=pred
-      aucres=aucres+auc(y[test],pred)
-      show(auc(y[test],pred))
-    }
+  for (i in 1:cross)
+  {
+    test<-smp[i,]
+    train<-setdiff(1:n,test)
+    
+    model=NaiveBayes(formula,data=set[train,],fL=1)
+    pred=predict(model,newdata=set[test,])[[2]][,2]
+    ans[test]=pred
+    aucres=aucres+auc(y[test],pred)
+    show(auc(y[test],pred))
+  }
   
   return(list(AUC=aucres/cross,Prob=ans))
 }
-system.time((a=bayes.cv(worse~.,train,smp=smp)))
+
+train1=train
+train1[,2:11]=predict(princomp(apply(train[,2:11],2,as.numeric)))
+train2=train1[,c(1:8,12:17)]
+system.time((a=bayes.cv(worse~.,train1,smp=smp)))
 
 
 
@@ -61,7 +68,6 @@ system.time((a=bayes.cv(worse~.,train,smp=smp)))
 naive=naiveBayes(worse~., data=train[1:100000,])
 pred <- predict(naive, train[100001:150000,],type="raw")
 auc(train$worse[100001:150000],pred[,2])
-
 
 
 
