@@ -1,9 +1,10 @@
+library(MASS)
 ridge.run=function(formula,varlist,trainset,testset)
 {
   pred=rep(0,nrow(testset))
   for (i in 1:ncol(varlist))
   {
-    varind=which(varlist[,i]==1)
+    varind=which(varlist[,i]==1)+1
     model=lm.ridge(formula,data=trainset[,c(1,varind)])
     pred=pred+apply(testset[,varind],2,as.numeric)%*%as.matrix(coef(model)[-1])+coef(model)[1]
     show(i)
