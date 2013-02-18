@@ -34,3 +34,5 @@ ridge.auc=a$AUC
 save(ridge.pl,file="ridge.pl.rda")
 save(ridge.auc,file="ridge.auc.rda")
 
+ridge.pl1=apply(ridge.pl,2,model.std)
+

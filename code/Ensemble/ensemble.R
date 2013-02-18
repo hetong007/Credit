@@ -78,7 +78,7 @@ rpart.logit.es=ensemble(cbind(rpart.pl,logit.pl),ans=train$worse,smp=smp,maxn=20
 ridge.es=ensemble(ridge.pl,ans=train$worse,smp=smp,maxn=30,replacement=T)#AUC is 0.8577097
 
 
-f3.es1=ensemble(cbind(rpart.pl,logit.pl,bayes.pl,ridge.pl),ans=train$worse,smp=smp,maxn=30,replacement=T)#AUC is 0.8590509
+f3.es1=ensemble(cbind(rpart.pl,logit.pl,bayes.pl,ridge.pl1),ans=train$worse,smp=smp,maxn=30,replacement=T)#AUC is 0.8591734
 
 
 ini.f3.es=iniensemble(cbind(rpart.pl,logit.pl,ridge.pl),k=15,ans=train$worse,smp=smp,maxn=50,replacement=T)#AUC is 0.8582039

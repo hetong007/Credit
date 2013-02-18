@@ -21,9 +21,11 @@ rpart.pred=rpart.test(worse~.,cplist=cplist,cpfreq=cpfreq,
                      trainset=train,testset=test)
 save(rpart.pred,file="rpart.testpred.rda")
 
-rpart.pred1=apply(rpart.pred,2,rpart.std)
+model.std<-function(prob){return((prob-min(prob))/(max(prob)-min(prob)))}
 
-rpart.pred2=apply(rpart.pred1[,f3.es[[1]][f3.es[[1]]<=20]],1,sum)
+rpart.pred1=apply(rpart.pred,2,model.std)
+
+rpart.pred2=apply(as.matrix(rpart.pred1[,f3.es1[[1]][f3.es1[[1]]<=20]]),1,sum)
 
 
 

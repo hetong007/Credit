@@ -1,5 +1,5 @@
 
-
+library(klaR)
 bayes.run=function(formula,varlist,varfreq,trainset,testset)
 {
   pred=rep(0,nrow(testset))
@@ -17,7 +17,7 @@ varfreq=table(bayes.es[[1]])
 varlist=as.matrix(model.var)[,as.numeric(names(varfreq))]
 bayes.pred=bayes.run(worse~.,varlist=varlist,varfreq=varfreq,trainset=train,testset=test)
 
-varfreq=table(f3.es[[1]][f3.es[[1]]>70&f3.es[[1]]<=120]-70)
+varfreq=table(f3.es1[[1]][f3.es1[[1]]>70&f3.es1[[1]]<=120]-70)
 varlist=model.var[,as.numeric(names(varfreq))]
 bayes.pred=bayes.run(worse~.,varlist=varlist,varfreq=varfreq,trainset=train,testset=test)
 

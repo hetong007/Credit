@@ -1,16 +1,29 @@
 library(MASS)
-ridge.run=function(formula,varlist,trainset,testset)
+
+
+ridge.run=function(formula,varlist,varfreq,trainset,testset)
 {
   pred=rep(0,nrow(testset))
+  if(is.factor(trainset[,1]))
+    trainset[,1]=as.numeric(trainset[,1])-1
   for (i in 1:ncol(varlist))
   {
     varind=which(varlist[,i]==1)+1
     model=lm.ridge(formula,data=trainset[,c(1,varind)])
-    pred=pred+apply(testset[,varind],2,as.numeric)%*%as.matrix(coef(model)[-1])+coef(model)[1]
-    show(i)
+    pred=pred+model.std((apply(testset[,varind],2,as.numeric)%*%as.matrix(coef(model)[-1])+coef(model)[1]))*varfreq[i]
+    show(i);show(pred[1:10])
   }
   return(pred)
 }
+
+ridge.id=f3.es1[[1]][f3.es1[[1]]>120&f3.es1[[1]]<=170]-120
+var=as.numeric(names(table(ridge.id)))
+varlist=as.matrix(model.var[,var])
+varfreq=table(ridge.id)
+ridge.pred=ridge.run(worse~.,varlist=varlist,varfreq=varfreq,trainset=train,testset=test)
+
+
+
 
 col=ridge.es[[1]]
 rvarlist=ridge.var[,col]

@@ -11,7 +11,7 @@ logit.run=function(formula,varlist,varfreq,trainset,testset)
 	}
 	return(pred)
 }
-logit.id=f3.es[[1]][f3.es[[1]]>20&f3.es[[1]]<=70]-20
+logit.id=f3.es1[[1]][f3.es1[[1]]>20&f3.es1[[1]]<=70]-20
 var=as.numeric(names(table(logit.id)))
 varlist=as.matrix(model.var[,var])
 varfreq=table(logit.id)
